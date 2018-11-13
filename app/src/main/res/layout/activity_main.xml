@@ -9,12 +9,14 @@
         android:id="@+id/consulter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Consulter mes rendez-vous" />
+        android:text="Consulter mes rendez-vous"
+        android:onClick="consulter"/>
 
     <Button
         android:id="@+id/nouveau"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Créer un rendez-vous" />
+        android:text="Créer un rendez-vous"
+        android:onClick="nouveau"/>
 
 </LinearLayout>

@@ -40,6 +40,27 @@ public class RendezVous {
         this.setContacts(contacts_temp);
     }
 
+    public String getDate_sql(){
+        return this.getJour() + "/" + this.getMois() + "/" + this.getJour();
+    }
+
+    public String getHeure_sql(){
+        return this.getHeure() + ":" + this.getMinute();
+    }
+
+    public String getContacts_sql(){
+        String res = "";
+        List<Contact> l_contacts = this.getContacts();
+        for(int i = 0; i< l_contacts.size(); ++i){
+            if (l_contacts.get(i).getNom().equals(null)){
+                res += l_contacts.get(i).getNumero();
+            } else {
+                res += l_contacts.get(i).getNom();
+            }
+        }
+        return res;
+    }
+
     public static int getNumero() {
         return numero;
     }

@@ -5,13 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class BD_rdv {
+public class BDRdv {
 
     private final static int VERSION_BDD = 1;
     private SQLiteDatabase bdd;
     private MaBaseSQLite maBaseSQLite;
 
-    public BD_rdv(Context context){
+    public BDRdv(Context context){
         maBaseSQLite = new MaBaseSQLite(context,"livres",null,VERSION_BDD);
     }
 

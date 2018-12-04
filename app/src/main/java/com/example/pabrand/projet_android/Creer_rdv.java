@@ -1,8 +1,10 @@
 package com.example.pabrand.projet_android;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +17,7 @@ import java.util.Calendar;
 
 public class Creer_rdv extends AppCompatActivity {
 
+    private static final int PICK_CONTACT = 0;
     private TextView affDate;
     private DatePickerDialog.OnDateSetListener dateListener;
 
@@ -22,6 +25,11 @@ public class Creer_rdv extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creer_rdv);
+    }
+
+    public void contact (View view){
+        Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        startActivityForResult(intent, PICK_CONTACT);
     }
 
     public void choisirDate(View view){

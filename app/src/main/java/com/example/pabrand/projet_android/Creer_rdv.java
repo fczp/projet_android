@@ -63,6 +63,9 @@ public class Creer_rdv extends AppCompatActivity {
                 int column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
                 String number = cursor.getString(column);
 
+                TextView t1 = (TextView) findViewById(R.id.contact);
+                t1.setText(number);
+
                 Toast toast = Toast.makeText(getApplicationContext(), number, Toast.LENGTH_SHORT);
                 toast.show();
                 // Do something with the contact here (bigger example below)

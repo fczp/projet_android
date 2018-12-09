@@ -18,6 +18,8 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.Calendar;
 
 public class Creer_rdv extends AppCompatActivity {
@@ -64,11 +66,9 @@ public class Creer_rdv extends AppCompatActivity {
                 String number = cursor.getString(column);
 
                 TextView t1 = (TextView) findViewById(R.id.contact);
-                t1.setText(number);
-
-                Toast toast = Toast.makeText(getApplicationContext(), number, Toast.LENGTH_SHORT);
-                toast.show();
-                // Do something with the contact here (bigger example below)
+                String texte = t1.getText().toString();
+                texte += number +";";
+                t1.setText(texte);
             }
         }
     }
@@ -96,5 +96,16 @@ public class Creer_rdv extends AppCompatActivity {
                 affDate.setText(jour_set + "/" + mois_set + "/" + annee_set);
             }
         };
+    }
+
+    public void creerRdv(View view){
+        String[] tabNumero;
+        TextView t1 = (TextView) findViewById(R.id.contact);
+        String numeros = t1.getText().toString();
+        tabNumero = numeros.split(";");
+        for(int i=0; i< tabNumero.length;i++){
+            Toast toast = Toast.makeText(getApplicationContext(), tabNumero[i], Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 }

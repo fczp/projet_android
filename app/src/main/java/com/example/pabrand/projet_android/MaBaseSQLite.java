@@ -10,7 +10,8 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
             "id integer primary key," +
             "date varchar(10)," +
             "heure varchar(5))," +
-            "contacts text;";
+            "contacts text;" +
+            "etat varchar(10)";
 
     final static String DROP_TABLE = "drop table rendezvous;";
 

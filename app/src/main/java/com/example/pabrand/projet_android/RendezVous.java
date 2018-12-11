@@ -13,8 +13,9 @@ public class RendezVous {
     private int heure;
     private int minute;
     private List<Contact> contacts;
+    private String etat;
 
-    public RendezVous(int id, int annee, int mois, int jour, int heure, int minute, List<Contact> contacts){
+    public RendezVous(int id, int annee, int mois, int jour, int heure, int minute, List<Contact> contacts, String etat){
         this.id = id;
         this.annee = annee;
         this.mois = mois;
@@ -22,9 +23,10 @@ public class RendezVous {
         this.heure = heure;
         this.minute = minute;
         this.contacts = contacts;
+        this.etat = etat;
     }
 
-    public RendezVous(int annee, int mois, int jour, int heure, int minute, List<Contact> contacts){
+    public RendezVous(int annee, int mois, int jour, int heure, int minute, List<Contact> contacts, String etat){
         this.id = numero ++;
         this.annee = annee;
         this.mois = mois;
@@ -32,6 +34,7 @@ public class RendezVous {
         this.heure = heure;
         this.minute = minute;
         this.contacts = contacts;
+        this.etat = etat;
     }
 
     public void ajouterContact(Contact contact){
@@ -119,5 +122,13 @@ public class RendezVous {
 
     public void setContacts(List<Contact> contacts) {
         this.contacts = contacts;
+    }
+
+    public String getEtat() {
+        return etat;
+    }
+
+    public void setEtat(String etat) {
+        this.etat = etat;
     }
 }

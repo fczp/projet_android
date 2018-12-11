@@ -1,7 +1,9 @@
 package com.example.pabrand.projet_android;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -11,10 +13,12 @@ import android.provider.Contacts;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +31,7 @@ public class Creer_rdv extends AppCompatActivity {
     static final int PICK_CONTACT_REQUEST = 1;  // The request code
     private TextView affDate;
     private DatePickerDialog.OnDateSetListener dateListener;
+    private String numero_manuel = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,5 +112,46 @@ public class Creer_rdv extends AppCompatActivity {
             Toast toast = Toast.makeText(getApplicationContext(), tabNumero[i], Toast.LENGTH_SHORT);
             toast.show();
         }
+    }
+
+    public void ajout_manuel(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Title");
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_PHONE);
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                numero_manuel = input.getText().toString();
+                dialog.cancel();
+            }
+        });
+        builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                numero_manuel = input.getText().toString();
+            }
+        });
+
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (numero_manuel.equals("")) {
+                    Toast toast1 = Toast.makeText(getApplicationContext(), "Numéro non précisé !", Toast.LENGTH_SHORT);
+                    toast1.show();
+                }else{
+                    TextView t1 = (TextView) findViewById(R.id.contact);
+                    String texte = t1.getText().toString();
+                    texte += numero_manuel + ";";
+                    t1.setText(texte);
+                    numero_manuel = "";
+                }
+            }
+        });
+
+        builder.show();
     }
 }

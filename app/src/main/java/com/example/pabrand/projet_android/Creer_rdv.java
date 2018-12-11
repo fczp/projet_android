@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.provider.Contacts;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -33,10 +34,16 @@ public class Creer_rdv extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener dateListener;
     private String numero_manuel = "";
 
+    boolean started = false;
+    boolean enabled = false;
+
+    MyGPS monGPS;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creer_rdv);
+        monGPS = new MyGPS(this);
     }
 
     public void pickContact(View view) {
@@ -108,10 +115,16 @@ public class Creer_rdv extends AppCompatActivity {
         TextView t1 = (TextView) findViewById(R.id.contact);
         String numeros = t1.getText().toString();
         tabNumero = numeros.split(";");
-        for(int i=0; i< tabNumero.length;i++){
-            Toast toast = Toast.makeText(getApplicationContext(), tabNumero[i], Toast.LENGTH_SHORT);
-            toast.show();
+
+        if(!monGPS.dispoGPS){
+            Toast.makeText(this, "Activez le GPS pour ce service.", Toast.LENGTH_LONG).show();
+            Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivityForResult(i, 1);
         }
+        else if(monGPS.dispoLoc)
+            monGPS.getLocation();
+        Toast.makeText(this, monGPS.getLatitude() +" , " +monGPS.getLongitude(), Toast.LENGTH_LONG).show();
+
     }
 
     public void ajout_manuel(View view){

@@ -1,16 +1,23 @@
 package com.example.pabrand.projet_android;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.provider.Contacts;
 import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -52,16 +59,9 @@ public class Creer_rdv extends AppCompatActivity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
 
-                // Get the URI that points to the selected contact
                 Uri contactUri = resultIntent.getData();
-                // We only need the NUMBER column, because there will be only one row in the result
                 String[] projection = {ContactsContract.CommonDataKinds.Phone.NUMBER};
 
-                // Perform the query on the contact to get the NUMBER column
-                // We don't need a selection or sort order (there's only one result for the given URI)
-                // CAUTION: The query() method should be called from a separate thread to avoid blocking
-                // your app's UI thread. (For simplicity of the sample, this code doesn't do that.)
-                // Consider using <code><a href="/reference/android/content/CursorLoader.html">CursorLoader</a></code> to perform the query.
                 Cursor cursor = getContentResolver()
                         .query(contactUri, projection, null, null, null);
                 cursor.moveToFirst();
@@ -70,16 +70,16 @@ public class Creer_rdv extends AppCompatActivity {
                 int column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
                 String number = cursor.getString(column);
 
-                TextView t1 = (TextView) findViewById(R.id.contact);
+                TextView t1 = findViewById(R.id.contact);
                 String texte = t1.getText().toString();
-                texte += number +";";
+                texte += number + ";";
                 t1.setText(texte);
             }
         }
     }
 
-    public void choisirDate(View view){
-        affDate = (TextView) findViewById(R.id.Texte_Date);
+    public void choisirDate(View view) {
+        affDate = findViewById(R.id.Texte_Date);
         Log.d("Creer_rdv", "choisirDate");
 
         Calendar cal = Calendar.getInstance();
@@ -97,26 +97,38 @@ public class Creer_rdv extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int annee_set, int mois_set, int jour_set) {
                 Log.d("Creer_rdv", "Entrée DPDialog");
-                mois_set ++;
+                mois_set++;
                 affDate.setText(jour_set + "/" + mois_set + "/" + annee_set);
             }
         };
     }
 
-    public void creerRdv(View view){
+    public void creerRdv(View view) {
+        double longitude = 0;
+        double latitude = 0;
         String[] tabNumero;
-        TextView t1 = (TextView) findViewById(R.id.contact);
+        TextView t1 = findViewById(R.id.contact);
         String numeros = t1.getText().toString();
         tabNumero = numeros.split(";");
-        for(int i=0; i< tabNumero.length;i++){
+        /*for(int i=0; i< tabNumero.length;i++){
             Toast toast = Toast.makeText(getApplicationContext(), tabNumero[i], Toast.LENGTH_SHORT);
             toast.show();
+        }*/
+
+        LocationManager lm = null;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            lm.getLastKnownLocation(lm.GPS_PROVIDER);
         }
+        Location lo = null;
+        lo.getLatitude();
+
+        Toast toast = Toast.makeText(getApplicationContext(), "Lat : " + lo.getLatitude() +"\nLon : " + lo.getLongitude(), Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     public void ajout_manuel(View view){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Title");
+        builder.setTitle("Ajouter un numéro");
 
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_PHONE);
@@ -143,7 +155,7 @@ public class Creer_rdv extends AppCompatActivity {
                     Toast toast1 = Toast.makeText(getApplicationContext(), "Numéro non précisé !", Toast.LENGTH_SHORT);
                     toast1.show();
                 }else{
-                    TextView t1 = (TextView) findViewById(R.id.contact);
+                    TextView t1 = findViewById(R.id.contact);
                     String texte = t1.getText().toString();
                     texte += numero_manuel + ";";
                     t1.setText(texte);
@@ -154,4 +166,5 @@ public class Creer_rdv extends AppCompatActivity {
 
         builder.show();
     }
+
 }

@@ -32,8 +32,11 @@ public class BDRdv {
         values.put("date", rdv.getDate_sql());
         values.put("heure", rdv.getHeure_sql());
         values.put("contacts", rdv.getContacts_sql());
+        values.put("etat", rdv.getEtat());
+        values.put("latitude", rdv.getLatitude());
+        values.put("longitude", rdv.getLongitude());
         //on insère l'objet dans la BDD via le ContentValues
-        return bdd.insert("livres",null,values);
+        return bdd.insert("rendezvous",null,values);
     }
 
     public Contact getContactDenomination(String titre){//Récupère dans un Cursor les valeur correspondant à un livre contenu dans la BDD

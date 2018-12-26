@@ -1,29 +1,30 @@
 package com.example.pabrand.projet_android;
 
-import android.app.Activity;
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.provider.Contacts;
 import android.provider.ContactsContract;
 import android.provider.Settings;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
-import android.widget.CalendarView;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.util.Calendar;
 
@@ -44,12 +45,14 @@ public class Creer_rdv extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creer_rdv);
         monGPS = new MyGPS(this);
+        activerBouton();
     }
 
     public void pickContact(View view) {
         Intent pickContactIntent = new Intent(Intent.ACTION_PICK, Uri.parse("content://contacts"));
         pickContactIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE); // Show user only contacts w/ phone numbers
         startActivityForResult(pickContactIntent, PICK_CONTACT_REQUEST);
+        activerBouton();
     }
 
     @Override
@@ -106,30 +109,48 @@ public class Creer_rdv extends AppCompatActivity {
                 Log.d("Creer_rdv", "Entrée DPDialog");
                 mois_set ++;
                 affDate.setText(jour_set + "/" + mois_set + "/" + annee_set);
+                activerBouton();
             }
         };
     }
 
     public void creerRdv(View view){
-        String[] tabNumero;
-        TextView t1 = (TextView) findViewById(R.id.contact);
-        String numeros = t1.getText().toString();
-        tabNumero = numeros.split(";");
 
-        if(!monGPS.dispoGPS){
-            Toast.makeText(this, "Activez le GPS pour ce service.", Toast.LENGTH_LONG).show();
-            Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivityForResult(i, 1);
+        if (obtenirDate().equals("") || obtenirNumeros().equals("")){
+            Toast.makeText(this, "Veuillez spécifier un numéro et une date !", Toast.LENGTH_LONG).show();
+            return;
         }
-        else if(monGPS.dispoLoc)
-            monGPS.getLocation();
-        Toast.makeText(this, monGPS.getLatitude() +" , " +monGPS.getLongitude(), Toast.LENGTH_LONG).show();
 
+        String message_probleme = "";
+
+        if (ContextCompat.checkSelfPermission(Creer_rdv.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            message_probleme = "Veuillez autoriser le GPS";
+        }
+
+        if (ContextCompat.checkSelfPermission(Creer_rdv.this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED){
+            if (message_probleme.equals("")) message_probleme = "Veuillez autoriser l'envoi de SMS";
+            else message_probleme += " et l'envoi de SMS";
+        }
+
+        if (!message_probleme.equals("")){
+            Toast.makeText(this, message_probleme, Toast.LENGTH_LONG).show();
+            return;
+        } else {
+
+            if(!monGPS.dispoGPS){
+                Toast.makeText(this, "Veuillez activer le GPS.", Toast.LENGTH_LONG).show();
+                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivityForResult(i, 1);
+            } else {
+                monGPS.getLocation();
+                SmsManager sms = SmsManager.getDefault();
+                sms.sendTextMessage(obtenirNumeros(), null, "Slt bb, est-ce que tu veux me rencontrer le " + obtenirDate() + " en " + monGPS.getLatitude() + " , " + monGPS.getLongitude(), null, null);}
+        }
     }
 
     public void ajout_manuel(View view){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Title");
+        builder.setTitle("Ajout manuel");
 
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_PHONE);
@@ -161,10 +182,35 @@ public class Creer_rdv extends AppCompatActivity {
                     texte += numero_manuel + ";";
                     t1.setText(texte);
                     numero_manuel = "";
+                    activerBouton();
                 }
             }
         });
-
         builder.show();
     }
+
+    private String obtenirNumeros(){
+        TextView numeros = (TextView) findViewById(R.id.contact);
+        return numeros.getText().toString();
+    }
+
+    private String obtenirDate(){
+        TextView date = (TextView) findViewById(R.id.Texte_Date);
+        return date.getText().toString();
+    }
+
+    @SuppressLint("ResourceAsColor")
+    private void activerBouton(){
+        Button bouton = (Button) findViewById(R.id.btn_creer);
+        if(obtenirNumeros().equals("") || obtenirDate().equals("")) {
+            bouton.setClickable(false);
+            bouton.setBackgroundColor(Color.TRANSPARENT);
+            //bouton.setBackgroundColor(R.color.rougePerso);
+        } else {
+            bouton.setClickable(true);
+            //bouton.setBackgroundColor(R.color.vertPerso);
+            bouton.setBackgroundColor(Color.LTGRAY);
+        }
+    }
+
 }

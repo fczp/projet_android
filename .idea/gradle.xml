@@ -8,8 +8,8 @@
         <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1" />
         <option name="modules">
           <set>
-            <option value="/autofs/unitytravail/travail/pabrand/MIAGE/M2/S1/Projet_Android" />
-            <option value="/autofs/unitytravail/travail/pabrand/MIAGE/M2/S1/Projet_Android/app" />
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

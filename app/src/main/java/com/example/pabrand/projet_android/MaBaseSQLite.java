@@ -11,7 +11,9 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
             "date varchar(10)," +
             "heure varchar(5))," +
             "contacts text;" +
-            "etat varchar(10)";
+            "etat varchar(10)" +
+            "latitude decimal(9,6)" +
+            "longitude decimal(9,6)";
 
     final static String DROP_TABLE = "drop table rendezvous;";
 

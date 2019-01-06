@@ -144,7 +144,7 @@ public class Creer_rdv extends AppCompatActivity {
             } else {
                 monGPS.getLocation();
                 SmsManager sms = SmsManager.getDefault();
-                sms.sendTextMessage(obtenirNumeros(), null, "Slt bb, est-ce que tu veux me rencontrer le " + obtenirDate() + " en " + monGPS.getLatitude() + " , " + monGPS.getLongitude(), null, null);}
+                sms.sendTextMessage(obtenirNumeros(), null, "Voulez-vous me rencontrer le " + obtenirDate() + " en " + monGPS.getLatitude() + " , " + monGPS.getLongitude() + "\nrdv://clic", null, null);}
         }
     }
 
